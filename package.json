@@ -1,0 +1,10 @@
+{
+  "name": "guess-or-splash",
+  "version": "1.0.0",
+  "private": true,
+  "description": "English word guessing game with Gemini-powered clues",
+  "scripts": {
+    "start": "node server.js",
+    "start:ps": "powershell -ExecutionPolicy Bypass -File ./server.ps1"
+  }
+}

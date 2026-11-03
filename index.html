@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guess or Splash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="shimmer"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+
+    <div class="bg-balloon blue b1"><span class="shine"></span><span class="knot"></span></div>
+    <div class="bg-balloon cyan b2"><span class="shine"></span><span class="knot"></span></div>
+    <div class="bg-balloon yellow b3"><span class="shine"></span><span class="knot"></span></div>
+    <div class="bg-balloon blue b4"><span class="shine"></span><span class="knot"></span></div>
+    <div class="bg-balloon cyan b5"><span class="shine"></span><span class="knot"></span></div>
+    <div class="bg-balloon red b6"><span class="shine"></span><span class="knot"></span></div>
+
+    <span class="droplet d1"></span>
+    <span class="droplet d2"></span>
+    <span class="droplet d3"></span>
+    <span class="droplet d4"></span>
+    <span class="droplet d5"></span>
+    <span class="droplet d6"></span>
+    <span class="droplet d7"></span>
+    <span class="droplet d8"></span>
+
+    <span class="bubble bu1"></span>
+    <span class="bubble bu2"></span>
+    <span class="bubble bu3"></span>
+    <span class="bubble bu4"></span>
+    <span class="bubble bu5"></span>
+    <span class="bubble bu6"></span>
+
+    <div class="burst burst-tl"></div>
+    <div class="burst burst-tr"></div>
+    <div class="burst burst-bl"></div>
+    <div class="burst burst-br"></div>
+
+    <div class="waves">
+      <div class="wave wave-back"></div>
+      <div class="wave wave-mid"></div>
+      <div class="wave wave-front"></div>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <section id="screen-start" class="screen active">
+    <div class="start-panel">
+      <div class="logo logo-hero" aria-label="Guess or Splash">
+        <span class="logo-guess">GUESS</span>
+        <span class="logo-or">OR</span>
+        <span class="logo-splash">SPLASH</span>
+      </div>
+      <p class="tagline start-tagline">Think fast, or get splashed!</p>
+      <p class="start-desc">
+        영어 설명 문장 2개와 글자 수로 단어를 추리하세요.<br />
+        틀리면 물풍선이 터집니다!
+      </p>
+      <button type="button" class="btn btn-primary btn-xl" id="btn-start">Play</button>
+      <button type="button" class="btn btn-ghost" id="btn-howto">How to Play</button>
+    </div>
+  </section>
+
+  <!-- How to Play Modal -->
+  <div id="modal-howto" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="howto-title">
+    <div class="modal-card">
+      <h2 id="howto-title">How to Play</h2>
+      <ol class="howto-list">
+        <li>두 개의 영어 설명과 글자 수를 보고 단어를 추리하세요.</li>
+        <li>정답을 입력하고 <strong>Submit</strong>을 누르세요.</li>
+        <li>틀리거나 시간이 끝나면 물풍선(목숨)이 하나 터집니다.</li>
+        <li><strong>Hint</strong>를 누르면 글자가 열리고 물풍선이 빨간색으로 바뀌며 X가 표시됩니다. 물풍선이 모두 빨간색일 때 다시 누르면 터집니다.</li>
+        <li><strong>Skip</strong>은 물풍선 차감 없이 다음 문제로 넘어갑니다.</li>
+      </ol>
+      <button type="button" class="btn btn-primary" id="btn-howto-close">Got it!</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <section id="screen-game" class="screen">
+    <header class="game-header">
+      <div class="logo logo-sm" aria-label="Guess or Splash">
+        <span class="logo-guess">GUESS</span>
+        <span class="logo-or">OR</span>
+        <span class="logo-splash">SPLASH</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-pill" title="Time remaining">
+          <span class="stat-icon" aria-hidden="true">⏱</span>
+          <span id="timer">01:00</span>
+        </div>
+        <div class="stat-pill" title="Hints used">
+          <span class="stat-icon" aria-hidden="true">💡</span>
+          <span>Hint <span id="hint-count">0</span>/4</span>
+        </div>
+        <div class="stat-pill" title="Lives">
+          <span class="stat-icon balloon-icon" aria-hidden="true"></span>
+          <span><span id="lives-count">4</span>/4</span>
+        </div>
+      </div>
+
+      <button type="button" class="icon-btn" id="btn-settings" aria-label="Settings">⚙</button>
+    </header>
+
+    <main class="game-main">
+      <article class="clue-card">
+        <div class="letter-badge">
+          <span class="badge-icon" aria-hidden="true">✎</span>
+          <span id="letter-count">0 Letters</span>
+        </div>
+        <ol class="clues" id="clue-list">
+          <li></li>
+          <li></li>
+        </ol>
+        <div class="letter-slots" id="letter-slots" aria-live="polite"></div>
+      </article>
+
+      <div class="lives-track" id="lives-track" aria-label="Water balloon lives"></div>
+
+      <form class="answer-row" id="answer-form" autocomplete="off">
+        <input
+          type="text"
+          id="answer-input"
+          class="answer-input"
+          placeholder="Type your answer..."
+          maxlength="32"
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="off"
+        />
+        <button type="submit" class="btn btn-primary" id="btn-submit">Submit</button>
+      </form>
+
+      <div class="action-row">
+        <button type="button" class="btn btn-hint" id="btn-hint">
+          <span aria-hidden="true">💡</span> Hint
+        </button>
+        <button type="button" class="btn btn-skip" id="btn-skip">
+          <span aria-hidden="true">↻</span> Skip
+        </button>
+        <p class="footer-tagline">
+          Think fast, or get splashed!
+          <span class="drop" aria-hidden="true"></span>
+          <span class="drop drop-2" aria-hidden="true"></span>
+        </p>
+      </div>
+    </main>
+
+    <div id="score-chip" class="score-chip">Score: <span id="score">0</span></div>
+  </section>
+
+  <!-- Settings Modal -->
+  <div id="modal-settings" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h2>Settings</h2>
+      <label class="setting-row">
+        <span>Sound effects</span>
+        <input type="checkbox" id="setting-sound" checked />
+      </label>
+      <label class="setting-row">
+        <span>Round time</span>
+        <select id="setting-time">
+          <option value="45">45 sec</option>
+          <option value="60" selected>60 sec</option>
+          <option value="90">90 sec</option>
+        </select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="btn-quit">Quit to Menu</button>
+        <button type="button" class="btn btn-primary" id="btn-settings-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback overlay (correct / splash) -->
+  <div id="feedback" class="feedback hidden" aria-live="assertive">
+    <div class="feedback-inner" id="feedback-inner"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <section id="screen-result" class="screen">
+    <div class="result-panel">
+      <h2 id="result-title">Game Over!</h2>
+      <p id="result-message" class="result-message"></p>
+      <div class="result-stats">
+        <div class="result-stat">
+          <span class="result-label">Score</span>
+          <span class="result-value" id="result-score">0</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-label">Correct</span>
+          <span class="result-value" id="result-correct">0</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-label">Streak</span>
+          <span class="result-value" id="result-streak">0</span>
+        </div>
+      </div>
+      <ul class="review-list" id="review-list"></ul>
+      <button type="button" class="btn btn-primary btn-xl" id="btn-replay">Play Again</button>
+      <button type="button" class="btn btn-ghost" id="btn-home">Back to Menu</button>
+    </div>
+  </section>
+
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
